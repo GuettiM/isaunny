@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iSauny – Intelligence Artificielle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Sora:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a1a;
+      --surface: #10102a;
+      --accent: #5f5fff;
+      --accent2: #8b5cf6;
+      --text: #e0e0f0;
+      --muted: #8888aa;
+      --card-bg: #13132e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 60px;
+      background: rgba(10,10,26,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(95,95,255,.2);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+    }
+
+    .logo span { color: var(--text); }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      transition: color .2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    .nav-btn {
+      background: var(--accent);
+      color: #fff !important;
+      padding: .4rem 1.1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .82rem;
+      transition: background .2s, transform .15s !important;
+    }
+
+    .nav-btn:hover { background: var(--accent2) !important; transform: scale(1.05); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 4rem 2rem;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 70% 50%, rgba(95,95,255,.25) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 20% 80%, rgba(139,92,246,.2) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0a22 0%, #0d0d2b 100%);
+    }
+
+    /* animated grid lines */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(95,95,255,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(95,95,255,.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridShift 8s linear infinite;
+    }
+
+    @keyframes gridShift {
+      from { background-position: 0 0; }
+      to   { background-position: 40px 40px; }
+    }
+
+    .hero-content {
+      position: relative;
+      display: flex;
+      gap: 3rem;
+      align-items: center;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .hero-text { flex: 1; }
+
+    .hero-text h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      line-height: 1.3;
+      color: #fff;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-text h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-text p {
+      font-size: .95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-text p strong { color: var(--text); }
+
+    .hero-cta {
+      display: inline-block;
+      padding: .75rem 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+      letter-spacing: .04em;
+      box-shadow: 0 0 24px rgba(95,95,255,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(95,95,255,.6);
+    }
+
+    .hero-visual {
+      flex: 0 0 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* robot icon placeholder */
+    .robot-wrap {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(95,95,255,.3) 0%, transparent 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: float 4s ease-in-out infinite;
+      font-size: 7rem;
+      filter: drop-shadow(0 0 24px rgba(95,95,255,.6));
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 3.5rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 40%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    /* ── CATEGORIES ── */
+    .categories { padding-top: 2rem; padding-bottom: 0; }
+
+    .cat-label {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: .3rem 1.1rem;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      margin-bottom: 1.2rem;
+    }
+
+    .cat-filters {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .cat-filters button {
+      background: transparent;
+      border: 1px solid rgba(95,95,255,.35);
+      color: var(--muted);
+      padding: .35rem 1.1rem;
+      border-radius: 999px;
+      font-size: .8rem;
+      cursor: pointer;
+      font-family: 'Sora', sans-serif;
+      transition: all .2s;
+    }
+
+    .cat-filters button:hover,
+    .cat-filters button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── GRID ARTICLES ── */
+    .articles { padding-top: 1.5rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(95,95,255,.15);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(95,95,255,.5);
+      box-shadow: 0 12px 32px rgba(95,95,255,.2);
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, #1a1a3e, #2a1a4e);
+    }
+
+    /* placeholder colours for demo images */
+    .card-img.c1 { background: linear-gradient(135deg,#1a1a3e,#12123a); }
+    .card-img.c2 { background: linear-gradient(135deg,#1e1432,#2a1a4e); }
+    .card-img.c3 { background: linear-gradient(135deg,#0e2040,#1a3050); }
+    .card-img.c4 { background: linear-gradient(135deg,#2a0e3a,#1a0a2e); }
+    .card-img.c5 { background: linear-gradient(135deg,#0e1a30,#1a2a40); }
+    .card-img.c6 { background: linear-gradient(135deg,#1a1a2e,#2e2e4e); }
+
+    .card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .card-body { padding: .9rem 1rem; }
+
+    .card-tag {
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .35rem;
+    }
+
+    .card-title {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* ── LOAD MORE ── */
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+
+    .btn-load {
+      display: inline-block;
+      padding: .7rem 2.5rem;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      border-radius: 999px;
+      font-family: 'Sora', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .04em;
+      transition: all .2s;
+    }
+
+    .btn-load:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(95,95,255,.4);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 3rem;
+      background: var(--surface);
+      border-top: 1px solid rgba(95,95,255,.2);
+      padding: 2.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    .footer-text {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .social-links { display: flex; gap: 1rem; }
+
+    .social-links a {
+      color: var(--muted);
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .social-links a:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero-content { flex-direction: column; text-align: center; }
+      .hero-visual { flex: none; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      nav ul { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="logo">i<span>Sauny</span></div>
+  <ul>
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#">À propos</a></li>
+    <li><a href="#">Tableau de bord</a></li>
+    <li><a href="#">Quiz</a></li>
+    <li><a href="#">Lien</a></li>
+    <li><a href="#" class="nav-btn">Log In</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1>L'histoire de l'<span>Intelligence Artificielle</span></h1>
+      <p>
+        L'intelligence artificielle (IA) désigne un ensemble d'une machine à imiter
+        l'intelligence humaine. Comme apprenez à résoudre des problèmes. Aujourd'hui, elle
+        est présente dans notre vie quotidienne, mais son histoire commence
+        bien avant les technologies modernes.
+        <strong>#IA #Sauny</strong>
+      </p>
+      <a href="#" class="hero-cta">Explorer →</a>
+    </div>
+    <div class="hero-visual">
+      <div class="robot-wrap">🤖</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CATEGORIES ── -->
+<section class="categories">
+  <div class="cat-label">Catégorie</div>
+  <div class="cat-filters">
+    <button class="active">Anciens</button>
+    <button>Futur</button>
+    <button>Présent</button>
+  </div>
+</section>
+
+<!-- ── ARTICLES GRID ── -->
+<section class="articles">
+  <div class="grid">
+    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-img-placeholder c1" style="background:linear-gradient(135deg,#0e1030,#1a1a4e);">🧠</div>
+      <div class="card-body">
+        <div class="card-tag">Histoire</div>
+        <div class="card-title">Les débuts de l'IA – les années 50</div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="card">
+      <div class="card-img-placeholder c2" style="background:linear-gradient(135deg,#1a0e30,#2e1a50);">🤖</div>
+      <div class="card-body">
+        <div class="card-tag">Robotique</div>
+        <div class="card-title">Robots humanoïdes : l'évolution</div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="card">
+      <div class="card-img-placeholder c3" style="background:linear-gradient(135deg,#0a1a2e,#1a3040);">⚡</div>
+      <div class="card-body">
+        <div class="card-tag">Futur</div>
+        <div class="card-title">Intelligence générale artificielle</div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="card">
+      <div class="card-img-placeholder c4" style="background:linear-gradient(135deg,#200a30,#38184e);">💡</div>
+      <div class="card-body">
+        <div class="card-tag">Innovation</div>
+        <div class="card-title">Laboratoire spatial & IA</div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="card">
+      <div class="card-img-placeholder c5" style="background:linear-gradient(135deg,#0e1824,#1a2a38);">🌐</div>
+      <div class="card-body">
+        <div class="card-tag">Data</div>
+        <div class="card-title">De la donnée à la décision : le process IA</div>
+      </div>
+    </div>
+    <!-- Card 6 -->
+    <div class="card">
+      <div class="card-img-placeholder c6" style="background:linear-gradient(135deg,#141428,#28284e);">🔬</div>
+      <div class="card-body">
+        <div class="card-tag">Recherche</div>
+        <div class="card-title">Machine Learning : fondamentaux</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="load-more-wrap">
+    <button class="btn-load">Afficher plus d'articles</button>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">iSauny</div>
+  <div class="footer-text">© 2026 iSauny – Tous droits réservés</div>
+  <div class="social-links">
+    <a href="#" title="Twitter">𝕏</a>
+    <a href="#" title="Instagram">📸</a>
+    <a href="#" title="LinkedIn">in</a>
+    <a href="#" title="YouTube">▶</a>
+  </div>
+</footer>
+
+<script>
+  // Category filter toggle
+  document.querySelectorAll('.cat-filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

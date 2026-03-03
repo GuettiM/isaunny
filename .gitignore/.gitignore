@@ -1,0 +1,17 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs / cache
+*.log
+tmp/
+cache/
+
+# Env (si tu en ajoutes plus tard)
+.env
+.env.local
+
+# Vendor (si tu utilises Composer plus tard)
+vendor/
