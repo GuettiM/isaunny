@@ -15,3 +15,5 @@ cache/
 
 # Vendor (si tu utilises Composer plus tard)
 vendor/
+node_modules/
+vendor/
